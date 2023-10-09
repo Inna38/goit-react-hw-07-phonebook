@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import css from './ContactForm.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
-import { addContactsAction } from 'redux/contactsSlice';
+import { addContact } from 'redux/contacts.thunk';
 
 export function ContactForm() {
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ export function ContactForm() {
     e.preventDefault();
 
     const name = e.currentTarget.elements.name.value;
-    const number = e.currentTarget.elements.number.value;
+    const phone = e.currentTarget.elements.number.value;
 
     const userContacts = contacts.find(contact => contact.name === name);
 
@@ -22,7 +22,7 @@ export function ContactForm() {
       return;
     }
 
-    dispatch(addContactsAction({ name, number, id: nanoid() }));
+    dispatch(addContact({ name, phone, id: nanoid() }));
 
     const form = e.currentTarget;
     form.reset();

@@ -5,31 +5,15 @@ import { fetchContacts } from 'redux/contacts.thunk';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
-import { deleteContactsAction } from 'redux/contactsSlice';
-import { filterContactsAction } from 'redux/filterSlice';
-
 
 export function App() {
-  const dispatchApi = useDispatch()
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.contacts);
-  const filter = useSelector(state => state.filter.filter);
-
-  const handleFilter = e => {
-    dispatch(filterContactsAction(e.target.value));
-  };
-
-  const deleteContact = id => {
-    dispatch(deleteContactsAction(id));
-  };
-
-  const filterContact = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  const isLoading = useSelector(state => state.contacts.isLoading);
+  const error = useSelector(state => state.contacts.error);
 
   useEffect(() => {
- dispatchApi(fetchContacts())
-  }, [dispatchApi])
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <div>
@@ -37,9 +21,13 @@ export function App() {
       <ContactForm />
 
       <h2>Contacts</h2>
-      <Filter onFilter={handleFilter} />
 
-      <ContactList contacts={filterContact} deleteContact={deleteContact} />
+      <Filter />
+
+      {isLoading && <h3>Loading...</h3>}
+      {error && <h3> Error...</h3>}
+
+      <ContactList />
     </div>
   );
 }
